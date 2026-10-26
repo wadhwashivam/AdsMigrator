@@ -3,6 +3,7 @@ using Microsoft.Data.Sqlite;
 using MySqlConnector;
 using AdsMigrator.Seeding;
 using AdsMigrator.Migration;
+using AdsMigrator.Verification;
 
 var config = new ConfigurationBuilder()
     .SetBasePath(AppContext.BaseDirectory)
@@ -28,6 +29,8 @@ switch(mode)
                 fresh: flags.Contains("fresh"), failFast: flags.Contains("fail-fast")).Run();
             break;
         }
-    case "verify": /* Phase 5 */ break;
+    case "verify":
+        Environment.ExitCode = new Verifier(sourceCs, targetCs).Run();
+        break;
     default: Console.WriteLine("Usage: seed | migrate | verify | test"); break;
 }
